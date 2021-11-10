@@ -1,0 +1,21 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+
+
+@if (Model.Customers.Count > 0)
+{
+    <table class="table table-striped">
+        @foreach (var p in Model.Customers)
+        {
+            <tr>
+                <td>@p.CompanyName</td>
+                <td>@p.ContactName</td>
+                <td>@p.Country</td>
+            </tr>
+        }
+    </table>
+}

@@ -1,0 +1,67 @@
+﻿@using Northwind.Store.Model
+@using Northwind.Store.UI.Web.Internet.Extensions
+@using Northwind.Store.UI.Web.Internet.ViewModels
+@using Microsoft.AspNetCore.Http
+@model Northwind.Store.UI.Web.Internet.ViewModels.CartViewModel
+
+
+@{
+    var pa = (Product)ViewBag.productAdded;
+    var paName = TempData["ProductName"];
+}
+@if (pa != null)
+{
+    <div class="alert alert-info" role="alert">
+        Nuevo producto: @pa.ProductName!
+    </div>
+}
+@inject IHttpContextAccessor httpContextaccessor
+@{
+
+
+
+    var cart = httpContextaccessor.HttpContext.Session.GetObject<CartViewModel>("Cart");
+}
+
+@if (Model != null && Model.Items.Any())
+{
+    <table class="table">
+        <thead>
+        <tr><th>Product</th><th>Price</th></tr>
+        </thead>
+        <tbody>
+        @foreach (var p in Model.Items)
+        {
+            <tr>
+                <td>@p.ProductName</td>
+                <td>@p.UnitPrice?.ToString("n")</td>
+            </tr>
+        }
+        </tbody>
+        <tfoot>
+        <tr><th>Items Count</th><td>@Model.Count</td></tr>
+        <tr><th>Items Total</th><td>@Model.Total.ToString("n")</td></tr>
+        </tfoot>
+    </table>
+    @if (cart is {Count: > 0 })
+    {
+        <label>@cart.Count</label>
+    }
+    <div>
+        <a asp-action="Checkout" asp-controller="Cart" 
+           class="list-group-item list-group-item-action">
+            <div class="row align-items-center">
+                <div class="col-8">
+                    <p>
+                       <button>Checkout</button>
+                    </p>
+                </div>
+    
+            </div>
+        </a>
+    </div>
+}
+else
+{
+    <h3>Your cart is empty! 😮</h3>
+}
